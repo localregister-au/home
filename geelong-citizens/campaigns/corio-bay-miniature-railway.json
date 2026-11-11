@@ -1,0 +1,40 @@
+{
+  "slug": "corio-bay-miniature-railway",
+  "status": "active",
+  "title": "Support the Corio Bay Miniature Railway at Haines Reserve",
+  "organiser": {
+    "name": "Corio Bay Miniature Railway"
+  },
+  "summary": "The Corio Bay Miniature Railway has proposed a passenger-carrying miniature railway and community development at Haines Reserve. Some residents opposing the proposal have been emailing councillors and Members of Parliament. If you support the project, let your representatives hear from you too.",
+  "background": [
+    "The Corio Bay Miniature Railway (CBMR) has proposed a passenger-carrying miniature railway and community development at Haines Reserve.",
+    "Residents opposing the proposal have started an email campaign to local councillors and Members of Parliament.",
+    "CBMR is asking supporters to write to the same representatives so that they also hear from people who support the project."
+  ],
+  "ask": "Support the proposed Corio Bay Miniature Railway and community development at Haines Reserve.",
+  "reasons": [
+    "It would give local families and kids something fun and affordable to do",
+    "I value volunteer-run community groups and want to see them supported",
+    "It would make good use of Haines Reserve for the whole community",
+    "It could bring visitors to the area and support local businesses",
+    "I or my family have enjoyed miniature railways and want one locally",
+    "It celebrates local heritage and engineering skills"
+  ],
+  "recipients": [
+    {
+      "id": "kontelj",
+      "name": "Cr Eddy Kontelj",
+      "salutation": "Councillor Kontelj",
+      "role": "Councillor, City of Greater Geelong",
+      "emails": ["eddy.kontelj@geelongcity.vic.gov.au", "stretch.kontelj@geelongcity.vic.gov.au"]
+    },
+    {
+      "id": "george",
+      "name": "Ella George MP",
+      "salutation": "Ms George",
+      "role": "State Member of Parliament",
+      "emails": ["ella.george@parliament.vic.gov.au"]
+    }
+  ],
+  "guidance": "Keep the tone positive and constructive. Focus on why the supporter wants the project; do not criticise or speculate about the people opposing it."
+}

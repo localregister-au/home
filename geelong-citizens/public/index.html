@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geelong Citizens</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site"><a href="/">Geelong Citizens</a></header>
+  <main>
+    <h1>Have your say</h1>
+    <p class="muted">Write to your councillors and Members of Parliament about local issues. Pick a campaign, tell us in a few words why it matters to you, and we'll help you write a personal email that you check and send.</p>
+    <div id="list"><p class="muted">Loading campaigns…</p></div>
+  </main>
+  <footer class="site">A community tool. Every email is written by, reviewed by and sent in the name of a real resident.</footer>
+  <script>
+    (async () => {
+      const list = document.getElementById("list");
+      try {
+        const campaigns = await (await fetch("/api/campaigns")).json();
+        list.replaceChildren();
+        if (!campaigns.length) list.innerHTML = '<p class="muted">No campaigns right now.</p>';
+        for (const c of campaigns) {
+          const a = document.createElement("a");
+          a.className = "card campaign-link";
+          a.href = `/c/${encodeURIComponent(c.slug)}`;
+          const h = document.createElement("h2");
+          h.textContent = c.title + (c.status === "closed" ? " (closed)" : "");
+          const p = document.createElement("p");
+          p.className = "muted";
+          p.textContent = c.summary;
+          a.append(h, p);
+          list.append(a);
+        }
+      } catch {
+        list.innerHTML = '<p class="error">Couldn\'t load campaigns. Please refresh.</p>';
+      }
+    })();
+  </script>
+</body>
+</html>

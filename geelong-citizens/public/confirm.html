@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Confirm your email · Geelong Citizens</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site"><a href="/">Geelong Citizens</a></header>
+  <main>
+    <p id="loading" class="muted">Loading…</p>
+    <p id="error" class="error hidden"></p>
+    <section id="preview" class="hidden">
+      <h1>Ready to send?</h1>
+      <p class="muted" id="campaign"></p>
+      <div class="card">
+        <p><strong>From:</strong> <span id="from"></span><br>
+           <strong>To:</strong> <span id="to"></span><br>
+           <strong>Subject:</strong> <span id="subject"></span></p>
+        <pre class="preview" id="body"></pre>
+      </div>
+      <button id="send-btn">Send</button>
+      <p class="muted"><small>You'll get a copy, and replies will come straight to you.</small></p>
+    </section>
+    <section id="done" class="hidden">
+      <h1>Sent. Thank you!</h1>
+      <p id="done-msg"></p>
+      <p><a href="/">See other campaigns</a></p>
+    </section>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const token = location.pathname.split("/").filter(Boolean)[1] ?? "";
+    const fail = (msg) => { $("loading").classList.add("hidden"); $("error").textContent = msg; $("error").classList.remove("hidden"); };
+    (async () => {
+      const res = await fetch(`/api/confirm/${encodeURIComponent(token)}`);
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) return fail(d.error || "This link isn't valid.");
+      $("campaign").textContent = d.campaignTitle;
+      $("from").textContent = `${d.name} <${d.email}>`;
+      $("to").textContent = d.recipients.join(", ");
+      $("subject").textContent = d.subject;
+      $("body").textContent = d.body;
+      $("loading").classList.add("hidden");
+      $("preview").classList.remove("hidden");
+    })();
+    $("send-btn").addEventListener("click", async () => {
+      $("send-btn").disabled = true;
+      $("send-btn").textContent = "Sending…";
+      const res = await fetch(`/api/confirm/${encodeURIComponent(token)}`, { method: "POST" });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { $("preview").classList.add("hidden"); return fail(d.error || "Sending failed."); }
+      $("preview").classList.add("hidden");
+      $("done-msg").textContent = `Your email is on its way to ${d.recipients.join(" and ")}. A copy has been sent to you.`;
+      $("done").classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>

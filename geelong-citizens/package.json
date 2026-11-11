@@ -1,0 +1,28 @@
+{
+  "name": "geelong-citizens",
+  "version": "0.1.0",
+  "description": "Help residents write to their representatives about local campaigns, with AI-assisted drafting.",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.ts",
+    "dev": "node --watch --env-file-if-exists=.env src/server.ts",
+    "check": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "express": "^5.3.0",
+    "nodemailer": "^10.5.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "@types/nodemailer": "^8.0.2",
+    "typescript": "^7.0.2"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  }
+}

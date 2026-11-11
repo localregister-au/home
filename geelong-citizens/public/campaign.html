@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campaign · Geelong Citizens</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site"><a href="/">Geelong Citizens</a></header>
+  <main>
+    <p id="loading" class="muted">Loading…</p>
+    <p id="load-error" class="error hidden"></p>
+
+    <section id="campaign" class="hidden">
+      <p class="muted" id="organiser"></p>
+      <h1 id="title"></h1>
+      <p id="summary"></p>
+      <p class="notice"><strong>The ask:</strong> <span id="ask"></span></p>
+      <p id="closed" class="notice hidden">This campaign has closed and is no longer taking new emails. Thank you to everyone who wrote in.</p>
+
+      <form id="draft-form" class="card">
+        <h2>1. Who to email</h2>
+        <div id="recipients"></div>
+
+        <h2 style="margin-top:22px">2. About you</h2>
+        <div class="row">
+          <div>
+            <label for="name">Your name</label>
+            <input id="name" type="text" autocomplete="name" maxlength="100" required>
+          </div>
+          <div>
+            <label for="suburb">Suburb <span class="hint">(optional, but representatives value it)</span></label>
+            <input id="suburb" type="text" autocomplete="address-level2" maxlength="100">
+          </div>
+        </div>
+
+        <h2 style="margin-top:22px">3. Why it matters to you</h2>
+        <div id="reasons"></div>
+        <label for="note">In your own words <span class="hint">(the most persuasive part: a sentence or two is plenty)</span></label>
+        <textarea id="note" maxlength="2000" placeholder="e.g. My grandkids would love this, and we'd use it every school holidays."></textarea>
+        <label for="tone">Style</label>
+        <select id="tone">
+          <option value="warm">Warm and personal</option>
+          <option value="formal">Formal</option>
+          <option value="brief">Short and to the point</option>
+        </select>
+        <div style="margin-top:14px">
+          <button type="submit" id="draft-btn">Write my email</button>
+          <button type="button" class="secondary" id="self-btn">I'll write it myself</button>
+        </div>
+        <p id="draft-error" class="error hidden"></p>
+      </form>
+
+      <section id="review" class="card hidden">
+        <h2>4. Check it, make it yours, then send</h2>
+        <p class="muted">Read it through and change anything that doesn't sound like you. It goes out in your name.</p>
+        <p class="muted" id="to-line"></p>
+        <label for="subject">Subject</label>
+        <input id="subject" type="text" maxlength="200">
+        <label for="body">Email</label>
+        <textarea id="body" maxlength="6000"></textarea>
+
+        <h2 style="margin-top:22px">Send from your own email <span class="hint muted" style="font-weight:400">(recommended)</span></h2>
+        <a class="button" id="mailto-btn" href="#">Open in my email app</a>
+        <a class="button secondary" id="gmail-btn" href="#" target="_blank" rel="noopener">Open in Gmail</a>
+        <button type="button" class="secondary" id="copy-btn">Copy email</button>
+        <button type="button" class="secondary" id="redraft-btn">Write a new version</button>
+        <p class="muted" id="copy-hint"><small>If your email app doesn't open with everything filled in, use “Copy email” and paste it in. Addresses: <span id="addresses"></span></small></p>
+
+        <div id="send-for-me" class="hidden">
+          <h2 style="margin-top:22px">Or we can send it for you</h2>
+          <p class="muted">We'll email you a link to confirm it's really you. Once you confirm, it's sent to your representatives with your address as the reply-to, and you get a copy.</p>
+          <label for="email">Your email address</label>
+          <input id="email" type="email" autocomplete="email" maxlength="254">
+          <button type="button" id="send-btn">Send me the confirmation link</button>
+          <p id="send-done" class="notice hidden"></p>
+        </div>
+        <p id="send-error" class="error hidden"></p>
+      </section>
+    </section>
+  </main>
+  <footer class="site">A community tool. Every email is written by, reviewed by and sent in the name of a real resident.</footer>
+  <script src="/campaign.js"></script>
+</body>
+</html>
