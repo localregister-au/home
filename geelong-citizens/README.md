@@ -6,7 +6,7 @@ For each campaign, supporters:
 
 1. Pick who to email (from the campaign's list of representatives).
 2. Enter their name and suburb, tick the reasons that apply to them, and add a sentence or two in their own words.
-3. Get a personal draft written by Claude, which they **edit and approve themselves**. ("I'll write it myself" skips the AI.)
+3. Get a personal draft, which they **edit and approve themselves**. With no API key, the site builds the letter from their reasons and their own words, and an optional button copies a prompt they can paste into their *own* AI assistant (Claude, ChatGPT…) to polish it. If you add an Anthropic API key, the site drafts with Claude directly instead.
 4. Send it **from their own email** (opens their mail app or Gmail with everything filled in), **or** have the site send it for them after they confirm their email address.
 
 ## Keeping it credible
@@ -26,7 +26,7 @@ Requires Node.js 22.18 or newer (it runs the TypeScript directly, with no build 
 ```bash
 cd geelong-citizens
 npm install
-cp .env.example .env      # then put your Anthropic API key in .env
+cp .env.example .env      # no API key needed
 npm run dev               # http://localhost:3000
 ```
 
@@ -84,7 +84,9 @@ The app is a single Node server, so any host that runs Node 22 will do (Render, 
 
 ## Costs
 
-Each draft is one Claude API call, a few thousand tokens at most, which costs roughly 1–3 cents on Claude Opus 5.5. The draft endpoint is rate-limited to 15 drafts per IP per hour. Settings:
+With no API key, the app costs nothing but hosting.
+
+If you turn on built-in AI drafting with `ANTHROPIC_API_KEY`, each draft is one Claude API call, a few thousand tokens at most, which costs roughly 1–3 cents on Claude Opus 5.5. The draft endpoint is rate-limited to 15 drafts per IP per hour. Settings:
 
 - `DRAFT_MODEL` (default `claude-opus-5-5`)
 - `DRAFT_EFFORT` (default `low`, for fast responses; try `medium` if drafts feel thin)

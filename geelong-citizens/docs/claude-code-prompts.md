@@ -14,7 +14,7 @@ For the bigger prompts (3 onwards), press **Shift+Tab** first to switch to *plan
 1. Install Node.js 22 or newer: run `brew install node`, or use the installer from nodejs.org.
 2. Install Claude Code. Follow https://code.claude.com/docs, or run:
    `curl -fsSL https://claude.ai/install.sh | bash`
-3. Get an Anthropic API key from https://console.anthropic.com. This key is what the app uses to draft emails.
+3. You don't need an Anthropic API key. Claude Code uses your normal Claude login, and the app builds letters without AI unless you add a key later.
 4. Unzip `geelong-citizens.zip`, then:
    ```bash
    cd ~/Downloads/geelong-citizens   # wherever you unzipped it
@@ -27,13 +27,14 @@ For the bigger prompts (3 onwards), press **Shift+Tab** first to switch to *plan
 ## 1. Get it running
 
 ```
-Read CLAUDE.md and README.md. Install the dependencies, create .env from
-.env.example with MAIL_TRANSPORT=console, and tell me exactly where to paste
-my ANTHROPIC_API_KEY (don't ask me to paste it into this chat). Then start
-the dev server and walk me through testing the Corio Bay Miniature Railway
-campaign: write a draft, edit it, and do the "send it for me" flow using the
-confirmation link printed in the terminal. Fix anything that doesn't work on
-macOS.
+Read CLAUDE.md and README.md. Check Node.js 22+ is installed (help me install
+it if not). Install the dependencies and create .env from .env.example with
+MAIL_TRANSPORT=console. I'm NOT using an Anthropic API key, so leave AI
+drafting off. Then start the dev server, open it in my browser, and walk me
+through testing the Corio Bay Miniature Railway campaign: build a letter,
+edit it, try "Copy a prompt for your AI assistant", and do the "send it for
+me" flow using the confirmation link printed in the terminal. Fix anything
+that doesn't work on macOS.
 ```
 
 ---
@@ -128,10 +129,10 @@ organised campaigns.
 - Add a suburb/postcode lookup that shows the resident who represents them at
   each level (council ward, state, federal). Let them choose who to write to.
 - The resident describes the issue in their own words, and optionally what
-  they'd like done. Claude drafts a letter using the same rules: only their
-  facts, courteous, nothing invented. Then the same review-and-send flow.
-- Reuse the existing drafting code where you can, with a separate system
-  prompt for free-form letters.
+  they'd like done. Build the letter the same way campaign letters are built
+  (template, plus the optional "copy a prompt for your AI assistant" button,
+  and Claude drafting only if an API key is set), following the same rules.
+  Then the same review-and-send flow.
 ```
 
 ---
@@ -166,6 +167,6 @@ addresses and check it doesn't land in spam.
 ---
 
 ### Tips
-- If Claude asks for an API key or password in the chat, say no and put it in `.env` yourself.
+- You don't need an API key. If you ever add one, put it in `.env` yourself and never paste it into the chat.
 - **"Explain what you just changed in plain English"** is a useful follow-up after any prompt.
 - Before launching a campaign, check the recipients' email addresses against the official websites yourself.

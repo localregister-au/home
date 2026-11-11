@@ -14,6 +14,9 @@ const campaigns = await loadCampaigns(path.join(root, "campaigns"));
 const PUBLIC_URL = (process.env.PUBLIC_URL ?? `http://localhost:${process.env.PORT ?? 3000}`).replace(/\/$/, "");
 const SITE_NAME = new URL(PUBLIC_URL).host;
 
+// AI drafting is optional: without a key, the site builds letters from a template instead.
+const aiDrafting = Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
+
 const HOUR = 60 * 60 * 1000;
 const draftLimiter = new RateLimiter(15, HOUR); // per IP: Claude calls cost money
 const sendLimiter = new RateLimiter(5, HOUR); // per IP: confirmation emails
@@ -65,7 +68,7 @@ function badRequest(res: Response, error: z.ZodError) {
 // ---------- API ----------
 
 app.get("/api/config", (_req, res) => {
-  res.json({ sendingEnabled });
+  res.json({ sendingEnabled, aiDrafting });
 });
 
 app.get("/api/campaigns", (_req, res) => {
@@ -78,6 +81,7 @@ app.get("/api/campaigns/:slug", (req, res) => {
 });
 
 app.post("/api/campaigns/:slug/draft", async (req, res) => {
+  if (!aiDrafting) return res.status(404).json({ error: "AI drafting isn't switched on." });
   const campaign = findCampaign(req, res);
   if (!campaign || !requireActive(campaign, res)) return;
 
@@ -215,7 +219,5 @@ app.listen(port, () => {
   console.log(`Geelong Citizens running at ${PUBLIC_URL} (port ${port})`);
   console.log(`Campaigns: ${[...campaigns.keys()].join(", ") || "(none)"}`);
   console.log(`"Send it for me": ${sendingEnabled ? `on (${process.env.MAIL_TRANSPORT})` : "off"}`);
-  if (!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
-    console.warn("Warning: ANTHROPIC_API_KEY is not set, so AI drafting will fail. Set it in .env.");
-  }
+  console.log(`AI drafting: ${aiDrafting ? "on" : "off (letters are built from a template; set ANTHROPIC_API_KEY to turn on)"}`);
 });

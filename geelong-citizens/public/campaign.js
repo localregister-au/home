@@ -1,7 +1,8 @@
 const $ = (id) => document.getElementById(id);
 const slug = decodeURIComponent(location.pathname.split("/").filter(Boolean)[1] ?? "");
 let campaign;
-let config = { sendingEnabled: false };
+let config = { sendingEnabled: false, aiDrafting: false };
+let variant = Math.floor(Math.random() * 3);
 let aiAssisted = false;
 
 function show(el, on = true) { el.classList.toggle("hidden", !on); }
@@ -86,6 +87,12 @@ async function draft(btn) {
     return showError($("draft-error"), "Tick at least one reason or write a sentence in your own words.");
   }
   showError($("draft-error"), "");
+  if (!config.aiDrafting) {
+    if (btn.id === "redraft-btn") variant++;
+    aiAssisted = false;
+    const d = templateLetter();
+    return openReview(d.subject, d.body);
+  }
   const label = btn.textContent;
   btn.disabled = true;
   btn.textContent = "Writing…";
@@ -101,11 +108,74 @@ async function draft(btn) {
   }
 }
 
+const lcFirst = (t) => t.charAt(0).toLowerCase() + t.slice(1);
+const sentence = (t) => (/[.!?]$/.test(t.trim()) ? t.trim() : `${t.trim()}.`);
+const joinNames = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`);
+
+/** Builds a letter from the supporter's own reasons and words, without AI. */
+function templateLetter() {
+  const name = $("name").value.trim();
+  const suburb = $("suburb").value.trim();
+  const note = $("note").value.trim();
+  const reasons = checked("reason");
+  const who = suburb ? `resident of ${suburb}` : "local resident";
+  const ask = sentence(lcFirst(campaign.ask));
+  const v = variant % 3;
+
+  const opening = [
+    `I'm writing as a ${who} to ask you to ${ask}`,
+    `As a ${who}, I'd like to ask you to ${ask}`,
+    `I'm a ${who}, and I'm writing to ask you to ${ask}`,
+  ][v];
+  const reasonsIntro = ["This matters to me because:", "My reasons are simple:", "Here's why it matters to me:"][v];
+  const closing = [
+    "Thank you for taking the time to consider my views. I'd welcome a reply.",
+    "Thank you for your time. I'd appreciate hearing where you stand.",
+    "I appreciate you reading this, and I'd be glad to hear back from you.",
+  ][v];
+
+  const parts = [`Dear ${joinNames(selectedRecipients().map((r) => r.salutation))},`, opening];
+  if (note) parts.push(sentence(note));
+  if (reasons.length) parts.push(`${note ? "I'd also add:" : reasonsIntro}
+${reasons.map((r) => `- ${r}`).join("\n")}`);
+  parts.push(closing, `Kind regards,\n${name}${suburb ? `\n${suburb}` : ""}`);
+  return { subject: campaign.title, body: parts.join("\n\n") };
+}
+
+/** A prompt the supporter can paste into their own AI assistant to polish the letter. */
+function aiPrompt() {
+  return `Please help me polish this email to my elected representatives.
+
+- Keep it in my voice: first person, Australian English, about 150-220 words.
+- Use only the facts in my draft and the background below. Don't add personal details, statistics or claims I haven't made.
+- Keep it courteous and don't criticise people who see it differently.
+- Reply with just the subject line and the email, as plain text.
+
+Background:
+${campaign.background.map((b) => `- ${b}`).join("\n")}
+
+My draft:
+Subject: ${$("subject").value}
+
+${$("body").value}`;
+}
+
+async function copyAiPrompt() {
+  try {
+    await navigator.clipboard.writeText(aiPrompt());
+    aiAssisted = true;
+    $("ai-copy-btn").textContent = "Prompt copied ✓";
+    setTimeout(() => ($("ai-copy-btn").textContent = "Copy a prompt for your AI assistant"), 2500);
+  } catch {
+    showError($("send-error"), "Couldn't copy automatically. Please select and copy the email text instead.");
+  }
+}
+
 function writeMyself() {
   const problem = validateBasics();
   if (problem) return showError($("draft-error"), problem);
   showError($("draft-error"), "");
-  const greeting = selectedRecipients().map((r) => r.name).join(" and ");
+  const greeting = joinNames(selectedRecipients().map((r) => r.salutation));
   const suburb = $("suburb").value.trim();
   aiAssisted = false;
   openReview(campaign.title, `Dear ${greeting},\n\n\n\nYours sincerely,\n${$("name").value.trim()}${suburb ? `\n${suburb}` : ""}`);
@@ -118,6 +188,7 @@ function openReview(subject, body) {
   $("to-line").textContent = `To: ${rs.map((r) => `${r.name} (${r.role})`).join("; ")}`;
   $("addresses").textContent = rs.flatMap((r) => r.emails).join(", ");
   show($("send-for-me"), config.sendingEnabled);
+  show($("ai-polish"), !config.aiDrafting);
   show($("send-done"), false);
   showError($("send-error"), "");
   show($("review"));
@@ -173,6 +244,7 @@ $("draft-form").addEventListener("submit", (e) => { e.preventDefault(); draft($(
 $("self-btn").addEventListener("click", writeMyself);
 $("redraft-btn").addEventListener("click", () => draft($("redraft-btn")));
 $("copy-btn").addEventListener("click", copyEmail);
+$("ai-copy-btn").addEventListener("click", copyAiPrompt);
 $("send-btn").addEventListener("click", sendForMe);
 $("subject").addEventListener("input", updateLinks);
 $("body").addEventListener("input", updateLinks);

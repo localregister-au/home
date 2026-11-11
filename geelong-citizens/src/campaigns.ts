@@ -58,7 +58,8 @@ export function publicCampaign(c: Campaign) {
     organiser: c.organiser,
     summary: c.summary,
     ask: c.ask,
+    background: c.background,
     reasons: c.reasons,
-    recipients: c.recipients.map((r) => ({ id: r.id, name: r.name, role: r.role, emails: r.emails })),
+    recipients: c.recipients.map((r) => ({ id: r.id, name: r.name, salutation: r.salutation, role: r.role, emails: r.emails })),
   };
 }
