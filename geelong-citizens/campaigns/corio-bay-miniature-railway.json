@@ -22,18 +22,31 @@
   ],
   "recipients": [
     {
-      "id": "kontelj",
+      "id": "eddy-kontelj",
       "name": "Cr Eddy Kontelj",
-      "salutation": "Councillor Kontelj",
-      "role": "Councillor, City of Greater Geelong",
-      "emails": ["eddy.kontelj@geelongcity.vic.gov.au", "stretch.kontelj@geelongcity.vic.gov.au"]
+      "salutation": "Councillor Eddy Kontelj",
+      "role": "Councillor for Hamlyn Heights Ward (where Haines Reserve is), City of Greater Geelong",
+      "emails": [
+        "eddy.kontelj@geelongcity.vic.gov.au"
+      ]
+    },
+    {
+      "id": "stretch-kontelj",
+      "name": "Cr Stretch Kontelj",
+      "salutation": "Councillor Stretch Kontelj",
+      "role": "Councillor, City of Greater Geelong (Mayor in 2026)",
+      "emails": [
+        "stretch.kontelj@geelongcity.vic.gov.au"
+      ]
     },
     {
       "id": "george",
       "name": "Ella George MP",
       "salutation": "Ms George",
       "role": "State Member of Parliament",
-      "emails": ["ella.george@parliament.vic.gov.au"]
+      "emails": [
+        "ella.george@parliament.vic.gov.au"
+      ]
     }
   ],
   "guidance": "Keep the tone positive and constructive. Focus on why the supporter wants the project; do not criticise or speculate about the people opposing it."
